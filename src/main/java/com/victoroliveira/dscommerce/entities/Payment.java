@@ -4,47 +4,40 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_order")
-public class Order implements Serializable{
-	
+@Table(name = "tb_payment")
+public class Payment implements Serializable{
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-	private Instant moment;	
-	private OrderStatus status;
+	private Instant moment;
 	
-	@ManyToOne
-	@JoinColumn(name = "client_id")
-	private User client;
+	@OneToOne
+	@MapsId
+	private Order order;
 	
-	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-	private Payment payment;
-
-	public Order() {		
+	public Payment() {		
 	}
-	
-	public Order(Long id, Instant moment, OrderStatus status, User client) {
+
+	public Payment(Long id, Instant moment, Order order) {
 		super();
 		this.id = id;
 		this.moment = moment;
-		this.status = status;
-		this.client = client;
+		this.order = order;
 	}
 
 	public Long getId() {
@@ -63,20 +56,12 @@ public class Order implements Serializable{
 		this.moment = moment;
 	}
 
-	public OrderStatus getStatus() {
-		return status;
+	public Order getOrder() {
+		return order;
 	}
 
-	public void setStatus(OrderStatus status) {
-		this.status = status;
-	}
-
-	public User getClient() {
-		return client;
-	}
-
-	public void setClient(User client) {
-		this.client = client;
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
 	@Override
@@ -92,8 +77,8 @@ public class Order implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Order other = (Order) obj;
+		Payment other = (Payment) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+		
 }
