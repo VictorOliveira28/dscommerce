@@ -96,19 +96,17 @@ public class Order implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
-	}	
+		return id != null ? id.hashCode() : 0;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (obj == null || getClass() != obj.getClass())
+			return false;		
 		Order other = (Order) obj;
-		return Objects.equals(id, other.id);
+		return id != null ? id.equals(other.id) : other.id == null;
 	}
 	
 }
