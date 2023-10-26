@@ -51,7 +51,7 @@ public class User implements UserDetails{
 
 	public User(Long id, String name, String email, String phone, LocalDate birthDate, String password
 			) {
-		super();
+		
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -111,6 +111,10 @@ public class User implements UserDetails{
 	
 	public List<Order> getOrders() {
 		return orders;
+	}
+	
+	public void addRole(Role role) {
+		roles.add(role);
 	}
 
 	@Override
