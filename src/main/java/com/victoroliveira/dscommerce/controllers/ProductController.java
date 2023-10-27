@@ -28,8 +28,7 @@ import jakarta.validation.Valid;
 public class ProductController {
 	
 	@Autowired
-	private ProductService service;
-	
+	private ProductService service;	
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {		 
