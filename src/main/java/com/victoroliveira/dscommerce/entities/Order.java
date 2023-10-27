@@ -84,8 +84,12 @@ public class Order implements Serializable{
 
 	public void setClient(User client) {
 		this.client = client;
-	}
+	}	
 	
+	public Payment getPayment() {
+		return payment;
+	}
+
 	public Set<OrderItem> getItems() {
 		return items;
 	}
@@ -107,6 +111,6 @@ public class Order implements Serializable{
 			return false;		
 		Order other = (Order) obj;
 		return id != null ? id.equals(other.id) : other.id == null;
-	}
+	}	
 	
 }
