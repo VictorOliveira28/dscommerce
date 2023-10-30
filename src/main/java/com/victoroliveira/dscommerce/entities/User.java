@@ -7,11 +7,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.Fetch;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,10 +42,10 @@ public class User implements UserDetails{
 	@OneToMany(mappedBy = "client")		
 	private List<Order> orders = new ArrayList<>();
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_user_role",
 	joinColumns = @JoinColumn(name = "user_id"),
-	inverseJoinColumns = @JoinColumn(name = "role_id"))
+	inverseJoinColumns = @JoinColumn(name = "role_id"))	
 	private Set<Role> roles = new HashSet<>();
 			
 	public User() {		
@@ -143,7 +145,7 @@ public class User implements UserDetails{
 			return false;		
 		User other = (User) obj;
 		return id != null ? id.equals(other.id) : other.id == null;
-	}
+	}	
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
