@@ -17,12 +17,16 @@ import com.victoroliveira.dscommerce.entities.Role;
 import com.victoroliveira.dscommerce.entities.User;
 import com.victoroliveira.dscommerce.projections.UserDetailsProjection;
 import com.victoroliveira.dscommerce.repositories.UserRepository;
+import com.victoroliveira.dscommerce.util.CustomUserUtil;
 
 @Service
 public class UserService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository repository;
+	
+	@Autowired
+	private CustomUserUtil customUserUtil;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -43,9 +47,8 @@ public class UserService implements UserDetailsService {
 	protected User authenticated() {
 		
 		try {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
-			String username = jwtPrincipal.getClaim("username");
+			
+			String username = customUserUtil.getLoggedUsername();
 			
 			return repository.findByEmail(username).get();
 			
