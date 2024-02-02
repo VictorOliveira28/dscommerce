@@ -17,7 +17,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -44,13 +43,13 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.victoroliveira.dscommerce.config.customgrant.CustomPasswordAuthenticationConverter;
-import com.victoroliveira.dscommerce.config.customgrant.CustomPasswordAuthenticationProvider;
-import com.victoroliveira.dscommerce.config.customgrant.CustomUserAuthorities;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.victoroliveira.dscommerce.config.customgrant.CustomPasswordAuthenticationConverter;
+import com.victoroliveira.dscommerce.config.customgrant.CustomPasswordAuthenticationProvider;
+import com.victoroliveira.dscommerce.config.customgrant.CustomUserAuthorities;
 
 @Configuration
 public class AuthorizationServerConfig {
@@ -65,7 +64,7 @@ public class AuthorizationServerConfig {
 	private Integer jwtDurationSeconds;
 
 	@Autowired
-	private UserDetailsService userDetailsService;
+	private UserDetailsService userDetailsService;	
 
 	@Bean
 	@Order(2)
@@ -96,7 +95,7 @@ public class AuthorizationServerConfig {
 	}
 
 	@Bean
-	public PasswordEncoder passwordEncoder() {
+	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
