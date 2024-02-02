@@ -14,7 +14,6 @@ import com.victoroliveira.dscommerce.dto.ProductMinDTO;
 import com.victoroliveira.dscommerce.entities.Category;
 import com.victoroliveira.dscommerce.entities.Product;
 import com.victoroliveira.dscommerce.repositories.ProductRepository;
-import com.victoroliveira.dscommerce.services.exceptions.DatabaseException;
 import com.victoroliveira.dscommerce.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -73,7 +72,7 @@ public class ProductService {
 		repository.deleteById(id);	
 		}
 		catch(DataIntegrityViolationException e) {
-			throw new DatabaseException("Falha de integridade referencial");
+			throw new DataIntegrityViolationException("Falha de integridade referencial");
 		}
 	}
 

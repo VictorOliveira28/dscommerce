@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -36,8 +37,9 @@ public class ProductServiceTests {
 	@Mock
 	ProductRepository repository;
 	
-	private long existingId;
-	private long nonExistingId;
+	private Long existingId;
+	private Long nonExistingId;
+	private Long dependentId;
 	private String productName;
 	private Product product;	
 	private ProductDTO productDTO;
@@ -64,6 +66,13 @@ public class ProductServiceTests {
 		
 		Mockito.when(repository.getReferenceById(existingId)).thenReturn(product);
 		Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
+		
+		Mockito.doThrow(DataIntegrityViolationException.class).when(repository).deleteById(dependentId);
+		Mockito.doThrow(ResourceNotFoundException.class).when(repository).deleteById(nonExistingId);
+
+		Mockito.when(repository.existsById(existingId)).thenReturn(true);
+		Mockito.when(repository.existsById(nonExistingId)).thenReturn(false);
+		Mockito.when(repository.existsById(dependentId)).thenReturn(true);
 
 	}
 	
@@ -129,6 +138,32 @@ public class ProductServiceTests {
 		
 		Mockito.verify(repository, Mockito.times(0)).save(product);
 		
+	}
+	
+	@Test
+	public void deleteByIdShouldThrowDataIntegrityViolationExceptionWhenDependentId() {
+		
+		Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+			service.deleteById(dependentId);
+		});
+	}
+	
+	@Test
+	public void deleteByIdShouldThrowResourceNotFoundExceptionWhenNonExistingId() {
+		
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			service.deleteById(nonExistingId);
+		});
+	}
+	
+	@Test
+	public void deleteByIdShouldDeleteProductWhenExistingId() {
+		
+		Assertions.assertDoesNotThrow(() -> {
+			service.deleteById(existingId);
+		});
+		
+		Mockito.verify(repository, Mockito.times(1)).deleteById(existingId);
 	}
 
 }
