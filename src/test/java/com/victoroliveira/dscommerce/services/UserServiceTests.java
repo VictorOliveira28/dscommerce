@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.victoroliveira.dscommerce.dto.UserDTO;
 import com.victoroliveira.dscommerce.entities.User;
 import com.victoroliveira.dscommerce.projections.UserDetailsProjection;
 import com.victoroliveira.dscommerce.repositories.UserRepository;
@@ -36,7 +37,7 @@ public class UserServiceTests {
 	
 	private String validUsername;
 	private String invalidUsername;	
-	private User user;
+	private User user;	
 	List<UserDetailsProjection> userDetails;
 	
 	@BeforeEach
@@ -45,7 +46,7 @@ public class UserServiceTests {
 		validUsername = "maria@gmail.com";
 		invalidUsername = "cicrano@gmail.com";
 		
-		user = UserFactory.createCustomClientUser(1L, validUsername);
+		user = UserFactory.createCustomClientUser(1L, validUsername);		
 		userDetails = UserDetailsFactory.createCustomClientUser(validUsername);
 		
 		
@@ -54,6 +55,7 @@ public class UserServiceTests {
 		
 		Mockito.when(repository.findByEmail(validUsername)).thenReturn(Optional.of(user));
 		Mockito.when(repository.findByEmail(invalidUsername)).thenReturn(Optional.empty());
+	
 	}
 	
 	@Test
@@ -96,6 +98,33 @@ public class UserServiceTests {
 		Assertions.assertThrows(UsernameNotFoundException.class, () -> {
 			
 			service.authenticated();
+			
+		});
+		
+	}
+	
+	@Test
+	public void getMeShouldReturnUserDTOWhenUserAuthenticated() {
+		
+		UserService spyUserService = Mockito.spy(service);
+		Mockito.doReturn(user).when(spyUserService).authenticated();		
+		
+		UserDTO dto = spyUserService.getMe();
+		
+		Assertions.assertNotNull(dto);
+		Assertions.assertEquals(dto.getEmail(), validUsername);
+	}
+	
+	@Test
+	public void getMeShouldThrowUsernameNotFoundExceptionWhenUserNotAuthenticated() {
+		
+		UserService spyUserService = Mockito.spy(service);
+		Mockito.doThrow(UsernameNotFoundException.class).when(spyUserService).authenticated();
+		
+		Assertions.assertThrows(UsernameNotFoundException.class, () -> {
+			
+			@SuppressWarnings("unused")
+			UserDTO result = spyUserService.getMe();
 			
 		});
 		
