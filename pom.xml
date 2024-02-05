@@ -98,6 +98,9 @@
 						<exclude>com/victoroliveira/dscommerce/dto/**</exclude>
 						<exclude>com/victoroliveira/dscommerce/controllers/handlers/**</exclude>
 						<exclude>com/victoroliveira/dscommerce/services/exceptions/**</exclude>
+						<exclude>com/victoroliveira/dscommerce/controllers/**</exclude>
+						<exclude>com/victoroliveira/dscommerce/util/**</exclude>
+
 					</excludes>					
 				</configuration>
 				

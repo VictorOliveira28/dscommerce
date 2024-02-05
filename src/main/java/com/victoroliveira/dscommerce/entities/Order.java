@@ -45,12 +45,13 @@ public class Order implements Serializable{
 	public Order() {		
 	}
 	
-	public Order(Long id, Instant moment, OrderStatus status, User client) {
+	public Order(Long id, Instant moment, OrderStatus status, User client, Payment payment) {
 		super();
 		this.id = id;
 		this.moment = moment;
 		this.status = status;
 		this.client = client;
+		this.payment = payment;
 	}
 
 	public Long getId() {
