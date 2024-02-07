@@ -2,6 +2,7 @@ package com.victoroliveira.dscommerce.controllers.handlers;
 
 import java.time.Instant;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -48,6 +49,13 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(ForbiddenException.class)
 	public ResponseEntity<CustomError> forbidden(ForbiddenException e, HttpServletRequest request) {
 	HttpStatus status = HttpStatus.FORBIDDEN;
+	CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+	return ResponseEntity.status(status).body(err);
+	}
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<CustomError> database(DataIntegrityViolationException e, HttpServletRequest request) {
+	HttpStatus status = HttpStatus.BAD_REQUEST;
 	CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
 	return ResponseEntity.status(status).body(err);
 	}
