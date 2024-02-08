@@ -16,6 +16,7 @@ import com.victoroliveira.dscommerce.services.exceptions.DatabaseException;
 import com.victoroliveira.dscommerce.services.exceptions.ForbiddenException;
 import com.victoroliveira.dscommerce.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
@@ -56,6 +57,13 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<CustomError> database(DataIntegrityViolationException e, HttpServletRequest request) {
 	HttpStatus status = HttpStatus.BAD_REQUEST;
+	CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+	return ResponseEntity.status(status).body(err);
+	}
+	
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<CustomError> entityNotFound(EntityNotFoundException e, HttpServletRequest request) {
+	HttpStatus status = HttpStatus.NOT_FOUND;
 	CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
 	return ResponseEntity.status(status).body(err);
 	}
